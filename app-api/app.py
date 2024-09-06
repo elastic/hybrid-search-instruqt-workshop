@@ -19,7 +19,7 @@ datasets = {
         "id": "movies",
         "label": "Movies",
         "index": "search-movies",
-        "search_fields": ["title", "overview", "keywords"],
+        "search_fields": ["title"],
         "result_fields": ["title", "overview"],
         "mapping_fields": {"text": "overview", "title": "title"},
     }
