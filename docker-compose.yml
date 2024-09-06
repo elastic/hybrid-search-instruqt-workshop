@@ -20,6 +20,6 @@ services:
     ports:
       - 3000:3000
     environment:
-      - NEXT_API_URL=http://host.docker.internal:8000
+      - NEXT_API_URL=http://api:8000
     depends_on:
       - api
