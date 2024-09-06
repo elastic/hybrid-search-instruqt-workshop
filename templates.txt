@@ -1,0 +1,153 @@
+Thanks for reaching out to us.
+
+I am pleased to inform you that we have successfully extended your trial period for 30days. You now have additional time to explore and evaluate the full capabilities of our product without interruption. 
+
+As trail can't be extended beyond that, I would recommend to get in touch with our Sales team and consider starting of your subscription. Transitioning to a full subscription will not only provide you with uninterrupted access to our services but also unlock a host of premium features and benefits that are designed to support your business objectives more effectively.
+
+Please let us know is you need more information.
+
+Regards,
+Neha Saini
+Senior Customer Success Engineer
+Elastic – Search. Observe. Protect.
+Hey ,
+
+I hope you've enjoyed using Elastic so far during your trial.
+I have extended your trial period up to the maximum of 30 days total (from when you started). 
+ We hope this extra period helps you work through your use case. 
+
+I work in the Customer Engineering team and we're here to help you with Elastic, typically helping with issues such as:
+
+Review of current deployment configuration
+Migration & upgrades
+Authentication (SAML and SSO)
+Architecture and performance best practices
+Ingestion, configuration, monitoring, and alerting
+Data management (storage tiers, index lifecycle, and snapshot management)
+If you would like technical advice as you work through the rest of your trial period then simply reply to this email.
+
+Thanks
+
+
+Hi Suraj,
+ 
+Thanks for reaching out to us.
+I am afraid, a trail can't be extended beyond 30 days total (from when it started), I would recommend to start monthly subscription or consider creating a new trial.
+ 
+Please let us know is you need more information.
+ 
+Regards, 
+Neha Saini
+Senior Customer Success Engineer
+Elastic – Search. Observe. Protect.
+
+
+Thank you for reaching out to us.
+
+I regret to inform you that direct support for ELK deployment on Ubuntu falls outside the scope of our standard support services. However, we have several resources available that can assist you in finding the information and help you need.
+
+
+I am afraid , ELK deployment on Ubuntu is out of our scope. Please use following channels for help.
+
+Community Forum. If you do not have a support subscription, you can go to our online community discuss forum (https://discuss.elastic.co/) where you have the option to search for and post any questions
+
+Elastic Consulting Services. If you need to have dedicated support for your projects, you might benefit from our paid consulting services (https://www.elastic.co/consulting), tailored to deliver your project outcome.
+
+ Elastic Training. If you wish to improve your knowledge of the Elastic stack, you can consider our training modules and certifications path (https://www.elastic.co/training/) relevant to your role
+
+Elastic Support. For product break-fixes and troubleshooting, you can email support@elastic.co or access your support portal (https://support.elastic.co). Support response time depends on the subscription tier you are currently at, you can refer to more details here
+
+We hope the above alternatives suffice in helping you extract more value from Elastic.
+
+Regards,
+Neha Saini
+Senior Customer Success Engineer
+Elastic – Search. Observe. Protect.
+
+
+
+My name is Neha, and I am part of the Customer Engineering team at Elastic. As Zoia is currently engaged with multiple threads, I will be stepping in to assist you with your inquiries.
+
+I am eager to connect with you for our upcoming discussion. Here are the time slots I have available for our meeting this week:
+
+Tuesday, June 26: 12:00 PM - 12:30 PM IST
+Wednesday, June 26: 1:00 PM - 1:30 PM IST, 2:00 PM - 2:30 PM IST
+Thursday, June 27  :1:00 PM - 1:30 PM IST, 2:00 PM - 2:30 PM IST
+Please let me know which slot suits you best, and I will ensure a calendar invite is sent to you without delay.
+
+I look forward to our conversation.
+
+Regards,
+Neha Saini
+Senior Customer Success Engineer
+Elastic | The Search AI Company
+
+
+
+Please share more details about yourself and the use-case you're developing on the Elastic Stack.
+ This will help me better understand how I can assist you and plan our call effectively.
+
+ Hi Sameeksha,
+
+Thanks for your reply.
+Please share following details with me , this will help me better understand how I can assist you and plan our call effectively.
+Can you describe the primary use case you are testing with the Elastic Cloud Service?
+Are there specific use cases or scenarios you have not yet had the chance to test but are crucial for your decision?
+What is your role in the company?
+
+Hi Riyaz,
+Thanks for your reply.
+Please choose a time slot that is convenient for you- Neha Calendar (IST)
+
+Looking forward to our conversation.
+
+
+According to me a search lab should have pre-build templates for common search scenarios, that can be used as a solid foundation by customers.
+covering key processes like data ingestion, Index designing, search tuning, ui integration.
+And I agree with Muhammad E-commerce is the best use case to pick, as it cover most of the scenarios.
+I believe we need to instill confidence in our customers that they can build search solution with Elastic without a need  to purchase COTS
+
+
+
+
+Support
+I'd suggest reaching out to Elastic support for immediate assistance. To submit a support case, please login to https://support.elastic.co. At present ajit.hegde@groww.in, aman.khare@groww.in, sourav.de@groww.in is part of the support contact and is authorised to submit support case.
+ 
+To register members to the support contact list for an Elastic Support Subscription, you need to follow these steps:
+Log in to the Elastic Support Portal at https://support.elastic.co/ using an account that already has support portal access and is listed as a support contact.
+Navigate to the "Support Contacts" section of the portal. You can typically find this by clicking on your profile or the appropriate menu item that leads to the management of support contacts.
+Select the subscription for which you want to add the new support contact. If there is only one subscription, it should be pre-selected.
+Click on the "Add Contact" button, which is usually located in the upper right area of the screen, below the user's avatar or initials.
+In the form that appears, enter the email address and name of the new user you wish to add as a support contact.
+Click "Add Contact" at the bottom of the form to submit the new contact information.
+The system will process the request, which may take a few seconds. Once completed, the new user should appear in the list of support contacts.
+The newly added user should now have access to the support portal and be able to create and read support cases associated with the subscription
+ 
+Regards,
+Chris Pinto
+
+
+
+
+	
+9/4/2024 9:37 PM
+Case Owner
+Michael Supangkat
+Customer Engineers
+Customer Care
+9/4/2024 9:37 PM
+Last Assignment Type
+Michael Supangkat
+Queue
+Manual
+
+
+01744873
+01744636
+01744637
+01744699docker-compose
+
+
+    #es = Elasticsearch(hosts=[ES_URL],basic_auth=(ES_USER, ES_PASSWORD)) 
+    #es = Elasticsearch(hosts=[ES_URL],basic_auth=(ES_USER, ES_PASSWORD)) 
+#ES_URL = os.environ["es_url"]
