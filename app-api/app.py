@@ -14,7 +14,7 @@ logging.basicConfig(
         logging.StreamHandler()          # Also print logs to the console
     ]
 )
-client = Elasticsearch(cloud_id=CLOUD_ID, basic_auth=(ES_USER, ES_PASSWORD))
+client = Elasticsearch(hosts=ES_URL, basic_auth=(ES_USER, ES_PASSWORD))
 
 
 datasets = {
