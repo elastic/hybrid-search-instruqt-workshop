@@ -14,6 +14,9 @@ logging.basicConfig(
         logging.StreamHandler()          # Also print logs to the console
     ]
 )
+client = Elasticsearch(cloud_id=CLOUD_ID, basic_auth=(ES_USER, ES_PASSWORD))
+
+
 datasets = {
     "movies": {
         "id": "movies",
@@ -86,9 +89,8 @@ def execute_search_request(index, body):
     """
     Executes an ES search request and returns the JSON response.
     """
-    es = Elasticsearch(hosts=[ES_URL],basic_auth=(ES_USER, ES_PASSWORD)) 
 
-    response = es.search(
+    response = client.search(
         index=index,
         query=body["query"],
         fields=body["fields"],
@@ -105,7 +107,7 @@ def execute_search_request_using_raw_dsl(index, body):
     """
     es = Elasticsearch(hosts=[ES_URL],basic_auth=(ES_USER, ES_PASSWORD)) 
 
-    response = es.perform_request(
+    response = client.perform_request(
         "POST",
         f"/{index}/_search",
         headers={"content-type": "application/json", "accept": "application/json"},
