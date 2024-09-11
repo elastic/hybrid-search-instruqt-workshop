@@ -105,7 +105,6 @@ def execute_search_request_using_raw_dsl(index, body):
     """
     Executes an ES search request using the request library and returns the JSON response.
     """
-    es = Elasticsearch(hosts=[ES_URL],basic_auth=(ES_USER, ES_PASSWORD)) 
 
     response = client.perform_request(
         "POST",
