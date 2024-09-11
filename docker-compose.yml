@@ -1,0 +1,25 @@
+services:
+  api:
+    build:
+      context: ./app-api
+      dockerfile: Dockerfile
+    volumes:
+      - './app-api:/usr/src/app'
+    ports:
+      - 8000:8000
+    environment:
+      - ES_URL=http://kubernetes-vm:30920
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=changeme
+  client:
+    build:
+      context: ./app-ui
+      dockerfile: Dockerfile
+    volumes:
+      - './app-ui:/usr/src/app'
+    ports:
+      - 3000:3000
+    environment:
+      - NEXT_API_URL=http://api:8000
+    depends_on:
+      - api
