@@ -32,8 +32,6 @@ datasets = {
 
 app = Flask(__name__)
 
-
-
 @app.route("/api/search/<index>")
 def route_api_search(index):
     """
@@ -106,24 +104,33 @@ def get_hybrid_request_body(query, size=10, **options):
         "_source": False,
         "fields": fields,
         "size": size,
-        "query": {
-            "bool": {
-                "should": [{
-                    "multi_match": {
-                        "fields": search_fields,
-                        "query": query,
-                        "boost": 1.5,
-                    }
-                },
-                 {
-                    "semantic": {
-                        "field": semantic_search_field,
-                        "query": query,
-                        "boost": 3.0,
-                    }
-                }]
+        "retriever": {
+    "rrf": {
+      "retrievers": [
+        {
+          "standard": {
+            "query": {
+              "match": {
+                "title": query
+              }
             }
+          }
         },
+        {
+          "standard": {
+            "query": {
+              "semantic": {
+                "field": "title_vector",
+                "query": query
+              }
+            }
+          }
+        }
+      ],
+      "rank_window_size": 50,
+      "rank_constant": 20
+    }
+  },
     }
 
 
@@ -198,7 +205,8 @@ def execute_search_request_using_raw_dsl(index, body):
     """
     Executes an ES search request using the request library and returns the JSON response.
     """
-      
+    logging.info("execute_search_request_using_raw_dsl");
+    logging.info(body);
     response = client.perform_request(
         "POST",
         f"/{index}/_search",
@@ -230,7 +238,7 @@ def run_semantic_search(query, index, **options):
         logging.info("hybrid search");
         body = get_hybrid_request_body(query, **options)
         # Execute the request using the raw DSL to avoid the ES Python client since sub_searches query are not supported yet
-        response_json = execute_search_request(index, body)
+        response_json = execute_search_request_using_raw_dsl(index, body)
     else:
         body = get_semantic_request_body(query, **options)
         logging.info("body");
@@ -259,4 +267,4 @@ def transform_search_response(searchResults, mappingFields):
             "text": fields[mappingFields["text"]],
             "title": fields[mappingFields["title"]],
         }
-    return searchResults
+    return searchResults   
