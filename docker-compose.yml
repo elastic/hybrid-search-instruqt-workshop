@@ -8,9 +8,9 @@ services:
     ports:
       - 8000:8000
     environment:
-      - ES_URL=http://kubernetes-vm:30920
+      - ES_URL=https://recommendations-service.es.europe-west1.gcp.cloud.es.io:9243
       - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=changeme
+      - ELASTICSEARCH_PASSWORD=dukc9ANY2lf7CG5ID3FHO3sa
   client:
     build:
       context: ./app-ui

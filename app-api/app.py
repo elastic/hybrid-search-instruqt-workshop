@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import os
 from elasticsearch import Elasticsearch
+from elasticsearch.client import SearchApplicationClient
 import logging
 
 ES_URL = os.environ["ES_URL"]
@@ -15,7 +16,7 @@ logging.basicConfig(
     ]
 )
 
-client = Elasticsearch(hosts=ES_URL, basic_auth=(ES_USER, ES_PASSWORD))
+client = SearchApplicationClient(Elasticsearch(hosts=ES_URL, basic_auth=(ES_USER, ES_PASSWORD)))
 
 
 datasets = {
@@ -85,10 +86,7 @@ def get_semantic_request_body(query, size=10, **options):
     fields = datasets[options["dataset"]]["result_fields"]
     search_field = datasets[options["dataset"]]["semantic_search_field"]
     return {
-        "_source": False,
-        "fields": fields,
-        "size": size,
-        "query": {"semantic": {"query": query, "field": search_field}},
+        "params": { "query_string" : query }
     }
 
 
@@ -183,7 +181,7 @@ def get_hybrid_search_rrf_request_body(query, size=10, **options):
     }
 
 
-def execute_search_request(index, body):
+def execute_search_request(index, body, search_app):
     """
     Executes an ES search request and returns the JSON response.
     """
@@ -191,11 +189,8 @@ def execute_search_request(index, body):
     logging.info(body);
 
     response = client.search(
-        index=index,
-        query=body["query"],
-        fields=body["fields"],
-        size=body["size"],
-        source=body["_source"],
+        name = search_app,
+        body=body
     )
 
     return response
@@ -237,13 +232,15 @@ def run_semantic_search(query, index, **options):
     if options.get("hybrid") == True:
         logging.info("hybrid search");
         body = get_hybrid_request_body(query, **options)
+        search_app = "hybrid"
         # Execute the request using the raw DSL to avoid the ES Python client since sub_searches query are not supported yet
-        response_json = execute_search_request_using_raw_dsl(index, body)
+        response_json = execute_search_request_using_raw_dsl(index, body, search_app)
     else:
         body = get_semantic_request_body(query, **options)
         logging.info("body");
         logging.info(body);
-        response_json = execute_search_request(index, body)
+        search_app = "semantic-search"
+        response_json = execute_search_request(index, body, search_app)
 
     return response_json["hits"]["hits"]
 
