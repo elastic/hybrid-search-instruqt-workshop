@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import os
 from elasticsearch import Elasticsearch
+from elasticsearch.client import SearchApplicationClient
 import logging
 
 ES_URL = os.environ["ES_URL"]
@@ -15,7 +16,7 @@ logging.basicConfig(
     ]
 )
 
-client = Elasticsearch(hosts=ES_URL, basic_auth=(ES_USER, ES_PASSWORD))
+client = SearchApplicationClient(Elasticsearch(hosts=ES_URL, basic_auth=(ES_USER, ES_PASSWORD)))
 
 
 datasets = {
@@ -127,10 +128,7 @@ def get_text_search_request_body(query, size=10, **options):
     fields = datasets[options["dataset"]]["result_fields"]
     search_fields = datasets[options["dataset"]]["search_fields"]
     return {
-        "_source": False,
-        "fields": fields,
-        "size": size,
-        "query": {"multi_match": {"query": query, "fields": search_fields}},
+        "params": { "query_string" : query }
     }
 
 
@@ -169,7 +167,7 @@ def get_hybrid_search_rrf_request_body(query, size=10, **options):
     }
 
 
-def execute_search_request(index, body):
+def execute_search_request(index, body, search_app):
     """
     Executes an ES search request and returns the JSON response.
     """
@@ -177,11 +175,8 @@ def execute_search_request(index, body):
     logging.info(body);
 
     response = client.search(
-        index=index,
-        query=body["query"],
-        fields=body["fields"],
-        size=body["size"],
-        source=body["_source"],
+        name = search_app,
+        body=body
     )
 
     return response
@@ -209,7 +204,8 @@ def run_full_text_search(query, index, **options):
     if query is None or query.strip() == "":
         raise Exception("Query cannot be empty")
     body = get_text_search_request_body(query, **options)
-    response = execute_search_request(index, body)
+    search_app = "text-search"
+    response = execute_search_request(index, body, search_app)
 
     return response["hits"]["hits"]
 
