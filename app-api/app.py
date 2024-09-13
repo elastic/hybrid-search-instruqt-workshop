@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import os
 from elasticsearch import Elasticsearch
+from elasticsearch.client import SearchApplicationClient
 import logging
 
 ES_URL = os.environ["ES_URL"]
@@ -15,7 +16,7 @@ logging.basicConfig(
     ]
 )
 
-client = Elasticsearch(hosts=ES_URL, basic_auth=(ES_USER, ES_PASSWORD))
+client = SearchApplicationClient(Elasticsearch(hosts=ES_URL, basic_auth=(ES_USER, ES_PASSWORD)))
 
 
 datasets = {
@@ -46,8 +47,13 @@ def route_api_search(index):
         request.args.get("dataset", default="movies"),
     ]
 
-    search_result = run_full_text_search(query, index, **{"dataset": datasetId})
-    
+    if type == "semantic":
+        search_result = run_semantic_search(
+            query, index, **{"hybrid": hybrid, "k": k, "dataset": datasetId}
+        )
+    elif type == "bm25":
+        search_result = run_full_text_search(query, index, **{"dataset": datasetId})
+
 
     transformed_search_result = transform_search_response(
         search_result, datasets[datasetId]["mapping_fields"]
@@ -80,10 +86,7 @@ def get_semantic_request_body(query, size=10, **options):
     fields = datasets[options["dataset"]]["result_fields"]
     search_field = datasets[options["dataset"]]["semantic_search_field"]
     return {
-        "_source": False,
-        "fields": fields,
-        "size": size,
-        "query": {"semantic": {"query": query, "field": search_field}},
+        "params": { "query_string" : query }
     }
 
 
@@ -96,27 +99,7 @@ def get_hybrid_request_body(query, size=10, **options):
     semantic_search_field = datasets[options["dataset"]]["semantic_search_field"]
     search_fields = datasets[options["dataset"]]["search_fields"]
     return {
-        "_source": False,
-        "fields": fields,
-        "size": size,
-        "query": {
-            "bool": {
-                "should": [{
-                    "multi_match": {
-                        "fields": search_fields,
-                        "query": query,
-                        "boost": 1.5,
-                    }
-                },
-                 {
-                    "semantic": {
-                        "field": semantic_search_field,
-                        "query": query,
-                        "boost": 3.0,
-                    }
-                }]
-            }
-        },
+        "params": { "query_string" : query }
     }
 
 
@@ -127,49 +110,11 @@ def get_text_search_request_body(query, size=10, **options):
     fields = datasets[options["dataset"]]["result_fields"]
     search_fields = datasets[options["dataset"]]["search_fields"]
     return {
-        "_source": False,
-        "fields": fields,
-        "size": size,
-        "query": {"multi_match": {"query": query, "fields": search_fields}},
+        "params": { "query_string" : query }
     }
 
 
-def get_hybrid_search_rrf_request_body(query, size=10, **options):
-    """
-    Generates an ES hybrid search with RRF
-    """
-    fields = datasets[options["dataset"]]["elser_search_fields"]
-    result_fields = datasets[options["dataset"]]["result_fields"]
-    search_fields = datasets[options["dataset"]]["search_fields"]
-    text_expansions = []
-    boost = 1
-
-    for field in fields:
-
-        split_field_descriptor = field.split("^")
-        if len(split_field_descriptor) == 2:
-            boost = split_field_descriptor[1]
-            field = split_field_descriptor[0]
-        te = {"text_expansion": {}}
-        te["text_expansion"][field] = {
-            "model_text": query,
-            "model_id": ".elser_model_1",
-            "boost": boost,
-        }
-        text_expansions.append(te)
-    return {
-        "_source": False,
-        "fields": result_fields,
-        "size": size,
-        "rank": {"rrf": {"window_size": 10, "rank_constant": 2}},
-        "sub_searches": [
-            {"query": {"bool": {"should": text_expansions}}},
-            {"query": {"multi_match": {"query": query, "fields": search_fields}}},
-        ],
-    }
-
-
-def execute_search_request(index, body):
+def execute_search_request(index, body, search_app):
     """
     Executes an ES search request and returns the JSON response.
     """
@@ -177,11 +122,8 @@ def execute_search_request(index, body):
     logging.info(body);
 
     response = client.search(
-        index=index,
-        query=body["query"],
-        fields=body["fields"],
-        size=body["size"],
-        source=body["_source"],
+        name = search_app,
+        body=body
     )
 
     return response
@@ -209,7 +151,8 @@ def run_full_text_search(query, index, **options):
     if query is None or query.strip() == "":
         raise Exception("Query cannot be empty")
     body = get_text_search_request_body(query, **options)
-    response = execute_search_request(index, body)
+    search_app = "text-search"
+    response = execute_search_request(index, body, search_app)
 
     return response["hits"]["hits"]
 
@@ -222,13 +165,15 @@ def run_semantic_search(query, index, **options):
     if options.get("hybrid") == True:
         logging.info("hybrid search");
         body = get_hybrid_request_body(query, **options)
+        search_app = "hybrid-search"
         # Execute the request using the raw DSL to avoid the ES Python client since sub_searches query are not supported yet
-        response_json = execute_search_request(index, body)
+        response_json = execute_search_request(index, body, search_app)
     else:
         body = get_semantic_request_body(query, **options)
         logging.info("body");
         logging.info(body);
-        response_json = execute_search_request(index, body)
+        search_app = "semantic-search"
+        response_json = execute_search_request(index, body, search_app)
 
     return response_json["hits"]["hits"]
 

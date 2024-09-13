@@ -5,7 +5,7 @@ import BackgroundPattern from './BackgroundPattern';
 import RRFToggle from './RRFToggle';
 import SearchResult from './SearchResult';
 
-export default function ResultSet({ index, type, results, enableHybrid, setEnableHybrid, activeResult, setActiveResult, globalSettings }) {
+export default function ResultSet({ index, type, results, enableRrf, setEnableRrf, activeResult, setActiveResult, globalSettings }) {
   const { theme, id, label, hybrid_capable, showChange } = type;
   const resultSetClasses = classNames(
     "p-8 relative", {
@@ -14,16 +14,20 @@ export default function ResultSet({ index, type, results, enableHybrid, setEnabl
     }
   )
 
-  console.log("enableHybrid",enableHybrid);
+  console.log("enableHybrid",enableRrf);
   console.log("Results:", results);
   return (
     <div className={resultSetClasses}>
       <BackgroundPattern theme={theme} />
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold text-white">{label}</h2>
-        
+        {(hybrid_capable && results.length > 0) && (
+          <div className="flex items-center gap-4">
+            <RRFToggle enableRrf={enableRrf} setEnableRrf={setEnableRrf} />
+            <p className="text-sm text-white font-medium">Enable Hybrid</p>
+          </div>
+        )}
       </div>
-     
       {results.map((result) => (
         <SearchResult
           key={result._id}

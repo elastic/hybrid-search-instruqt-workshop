@@ -2,30 +2,30 @@ import React from "react";
 import { Switch } from "@headlessui/react";
 import classNames from "classnames";
 
-export default function RRFToggle({ enableHybrid, setEnableHybrid }) {
+export default function RRFToggle({ enableRrf, setEnableRrf }) {
   const setEnabled = () => {
-    setEnableHybrid(!enableHybrid);
+    setEnableRrf(!enableRrf);
   };
 
   return (
     <Switch
-      checked={enableHybrid}
+      checked={enableRrf}
       onChange={setEnabled}
       className={classNames(
-        enableHybrid ? "bg-elastic-blue" : "bg-elastic-blue-dark",
+        enableRrf ? "bg-elastic-blue" : "bg-elastic-blue-dark",
         "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
       )}
     >
       <span className="sr-only">Use setting</span>
       <span
         className={classNames(
-          enableHybrid ? "translate-x-5" : "translate-x-0",
+          enableRrf ? "translate-x-5" : "translate-x-0",
           "pointer-events-none relative inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
         )}
       >
         <span
           className={classNames(
-            enableHybrid
+            enableRrf
               ? "opacity-0 ease-out duration-100"
               : "opacity-100 ease-in duration-200",
             "absolute inset-0 flex h-full w-full items-center justify-center transition-opacity"
@@ -48,7 +48,7 @@ export default function RRFToggle({ enableHybrid, setEnableHybrid }) {
         </span>
         <span
           className={classNames(
-            enableHybrid
+            enableRrf
               ? "opacity-100 ease-in duration-200"
               : "opacity-0 ease-out duration-100",
             "absolute inset-0 flex h-full w-full items-center justify-center transition-opacity"

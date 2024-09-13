@@ -4,7 +4,7 @@ import ResultSet from './ResultSet';
 
 export default function Results({ query, globalSettings, selectedDataset }) {
   const [results, setResults] = useState([]);
-  const [enableHybrid, setEnableHybrid] = useState(false);
+  const [enableRrf, setEnableRrf] = useState(false);
   const [activeResult, setActiveResult] = useState(null);
 
   const types = [
@@ -24,12 +24,11 @@ export default function Results({ query, globalSettings, selectedDataset }) {
   ]
 
   useEffect(() => {
-    console.log(enableHybrid)
+    console.log(enableRrf)
     if (query) {
       setResults([])
       types.forEach((type) => {
-      if (type.id === 'bm25') {
-        fetch(`api/search/${selectedDataset.index}?q=${query}&hybrid=${enableHybrid}&type=${type.id}&dataset=${selectedDataset.id}`)
+        fetch(`api/search/${selectedDataset.index}?q=${query}&hybrid=${enableRrf}&type=${type.id}&dataset=${selectedDataset.id}`)
           .then((res) => res.json())
           .then((data) => {
             setResults((results) => {
@@ -40,22 +39,11 @@ export default function Results({ query, globalSettings, selectedDataset }) {
             });
           });
       }
-       if (type.id === 'semantic') {
-          setResults((results) => {
-            return {
-              ...results,
-              [type.id]: [],
-            }
-          });
-        }
-      }
-
-
       );
     } else {
       setResults([])
     }
-  }, [query, enableHybrid]);
+  }, [query, enableRrf]);
 
   useEffect(() => {
     if (results['bm25'] && results['semantic']) {
@@ -81,7 +69,7 @@ export default function Results({ query, globalSettings, selectedDataset }) {
     }
 
     
-  }, [results, enableHybrid]);
+  }, [results, enableRrf]);
 
 
   return (
@@ -95,8 +83,8 @@ export default function Results({ query, globalSettings, selectedDataset }) {
               type={type}
               query={query}
               results={results[type.id] || []}
-              enableHybrid={enableHybrid}
-              setEnableHybrid={setEnableHybrid}
+              enableRrf={enableRrf}
+              setEnableRrf={setEnableRrf}
               activeResult={activeResult}
               setActiveResult={setActiveResult}
               globalSettings={globalSettings}
