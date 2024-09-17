@@ -3,6 +3,7 @@ services:
     build:
       context: ./app-api
       dockerfile: Dockerfile
+    image: api_image:${BRANCH_NAME:-latest}
     volumes:
       - './app-api:/usr/src/app'
     ports:
