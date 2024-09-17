@@ -16,6 +16,7 @@ services:
     build:
       context: ./app-ui
       dockerfile: Dockerfile
+    image: client_image:${BRANCH_NAME:-latest}
     volumes:
       - './app-ui:/usr/src/app'
     ports:
