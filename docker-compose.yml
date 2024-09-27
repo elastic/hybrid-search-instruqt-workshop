@@ -7,7 +7,7 @@ services:
     volumes:
       - './app-api:/usr/src/app'
     ports:
-      - 8003:8000
+      - 8000:8000
     environment:
       - ES_URL=http://kubernetes-vm:30920
       - ELASTICSEARCH_USERNAME=elastic
@@ -20,7 +20,7 @@ services:
     volumes:
       - './app-ui:/usr/src/app'
     ports:
-      - 3003:3000
+      - 3000:3000
     environment:
       - NEXT_API_URL=http://api:8000
     depends_on:
