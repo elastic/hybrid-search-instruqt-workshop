@@ -13,7 +13,7 @@ services:
       - ELASTICSEARCH_USERNAME=elastic
       - ELASTICSEARCH_PASSWORD=changeme
     healthcheck:  
-      test: ["CMD-SHELL", "curl -G --data-urlencode \"q=spirited away\" --data-urlencode \"hybrid=false\" --data-urlencode \"type=bm25\" --data-urlencode \"dataset=movies\" http://localhost:8000/api/search/search-movies || exit 1"]  
+      test: ["CMD", "sh", "-c", "curl -f -u $ELASTICSEARCH_USERNAME:$ELASTICSEARCH_PASSWORD -H 'Content-Type: application/json' -d '{\"params\": {\"query_string\": \"spirited away\"}}' $ES_URL/_application/search_application/text-search/_search"]
       interval: 30s  
       timeout: 10s  
       retries: 5  
