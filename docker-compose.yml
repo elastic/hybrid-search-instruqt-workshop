@@ -12,11 +12,7 @@ services:
       - ES_URL=http://kubernetes-vm:30920
       - ELASTICSEARCH_USERNAME=elastic
       - ELASTICSEARCH_PASSWORD=changeme
-    healthcheck:  
-      test: ["CMD", "sh", "-c", "curl -f -u $ELASTICSEARCH_USERNAME:$ELASTICSEARCH_PASSWORD -H 'Content-Type: application/json' -d '{\"params\": {\"query_string\": \"spirited away\"}}' $ES_URL/_application/search_application/text-search/_search"]
-      interval: 30s  
-      timeout: 10s  
-      retries: 5  
+    command: ["sh", "-c", "sleep 10 && curl -X GET 'http://localhost:3000/api/search/search-movies?q=book&hybrid=false&type=bm25&dataset=movies'"]
   client:
     build:
       context: ./app-ui
