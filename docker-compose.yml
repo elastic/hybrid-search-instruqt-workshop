@@ -12,7 +12,6 @@ services:
       - ES_URL=http://kubernetes-vm:30920
       - ELASTICSEARCH_USERNAME=elastic
       - ELASTICSEARCH_PASSWORD=changeme
-    command: ["sh", "-c", "sleep 10 && curl -X GET 'http://localhost:3000/api/search/search-movies?q=book&hybrid=false&type=bm25&dataset=movies'"]
   client:
     build:
       context: ./app-ui
@@ -24,5 +23,10 @@ services:
       - 3000:3000
     environment:
       - NEXT_API_URL=http://api:8000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/search/search-movies?q=book&hybrid=false&type=bm25&dataset=movies"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
     depends_on:
       - api
