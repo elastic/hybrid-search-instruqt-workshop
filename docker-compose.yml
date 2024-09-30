@@ -12,6 +12,11 @@ services:
       - ES_URL=http://kubernetes-vm:30920
       - ELASTICSEARCH_USERNAME=elastic
       - ELASTICSEARCH_PASSWORD=changeme
+    healthcheck:  
+      test: ["CMD-SHELL", "curl -G --data-urlencode \"q=spirited away\" --data-urlencode \"hybrid=false\" --data-urlencode \"type=bm25\" --data-urlencode \"dataset=movies\" http://localhost:8000/api/search/search-movies || exit 1"]  
+      interval: 30s  
+      timeout: 10s  
+      retries: 5  
   client:
     build:
       context: ./app-ui
